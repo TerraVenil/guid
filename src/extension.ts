@@ -1,7 +1,7 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import * as uuid from 'node-uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 export function activate(context: vscode.ExtensionContext) {
     const generateGuid = (lowercase) => () => {
@@ -9,7 +9,7 @@ export function activate(context: vscode.ExtensionContext) {
 
         vscode.window.activeTextEditor.edit(builder => {
             textEditor.selections.forEach(sel => {
-                let result = uuid.v4();
+                let result = uuidv4();
                 if (!lowercase) {
                     result = result.toUpperCase();
                 }
