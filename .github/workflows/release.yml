@@ -1,19 +1,46 @@
+name: Release Workflow
 on:
   push:
-    tags:
-      - "*"
-
-name: Release
+    branches:
+      - master
+    paths:
+      - package.json
 jobs:
-  deploy:
+  tag-npm-release:
+    name: Tag new npm package releases
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - shell: bash
+        id: tagcheck
+        run: |
+          #!/bin/bash
+          set -eux
+
+          TAG="${TAG_PREFIX}$(cat package.json | jq -r '.version')"
+
+          # In case only a shallow clone was done
+          git fetch --tags
+
+          if ! git tag | grep "${TAG}"; then
+            exit 10
+          else
+            exit 20
+          fi
+        env:
+          GIT_USER_NAME:  41898282+github-actions[bot]@users.noreply.github.com
+          GIT_USER_EMAIL: github-actions[bot]
+      - if: steps.tagcheck.outputs.exit_code == 10
+        uses: neverendingqs/gh-action-tag-on-npm-version@master
+      - if: steps.tagcheck.outputs.exit_code == 10
+        uses: actions/setup-node@v1
         with:
           node-version: 16
-      - run: npm ci
-      - name: Publish to Visual Studio Marketplace
+      - if: steps.tagcheck.outputs.exit_code == 10
+        run: npm ci
+      - if: steps.tagcheck.outputs.exit_code == 10
+        name: Publish to Visual Studio Marketplace
         uses: HaaLeo/publish-vscode-extension@v1
         with:
           pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
