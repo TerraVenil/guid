@@ -2,7 +2,7 @@
   "name": "guid",
   "displayName": "guid",
   "description": "A command that creates a new guid.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "kosunix",
   "engines": {
     "vscode": "^0.10.10"
