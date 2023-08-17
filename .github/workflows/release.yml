@@ -23,6 +23,7 @@ jobs:
 
       - shell: bash
         id: tagcheck
+        continue-on-error: true
         run: |
           #!/bin/bash
           set -eux
