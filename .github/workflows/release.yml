@@ -34,27 +34,28 @@ jobs:
           git fetch --tags
 
           if ! git tag | grep "${TAG}"; then
-            exit 10
+            echo ::set-output name=exit_code::404
           else
-            exit 20
+            echo ::set-output name=exit_code::201
           fi
 
-      - if: steps.tagcheck.outputs.exit_code == 10
+
+      - if: always() && steps.tagcheck.outputs.exit_code == 404
         uses: neverendingqs/gh-action-tag-on-npm-version@master
         with:
           git-user-email: ${{ env.GIT_USER_NAME }}
           git-user-name: ${{ env.GIT_USER_EMAIL }}
           tag-prefix: ${{ env.TAG_PREFIX }}
 
-      - if: steps.tagcheck.outputs.exit_code == 10
+      - if: always() && steps.tagcheck.outputs.exit_code == 404
         uses: actions/setup-node@v1
         with:
           node-version: 16
 
-      - if: steps.tagcheck.outputs.exit_code == 10
+      - if: always() && steps.tagcheck.outputs.exit_code == 404
         run: npm ci
 
-      - if: steps.tagcheck.outputs.exit_code == 10
+      - if: always() && steps.tagcheck.outputs.exit_code == 404
         name: Publish to Visual Studio Marketplace
         uses: HaaLeo/publish-vscode-extension@v1
         with:
