@@ -1,17 +1,26 @@
 name: Release Workflow
+
+env:
+  GIT_USER_NAME:  41898282+github-actions[bot]@users.noreply.github.com
+  GIT_USER_EMAIL: github-actions[bot]
+  TAG_PREFIX: v
+
 on:
   push:
     branches:
       - master
     paths:
       - package.json
+
 jobs:
   tag-npm-release:
-    name: Tag new npm package releases
+    name: Release extension
     runs-on: ubuntu-latest
 
     steps:
+
       - uses: actions/checkout@v2
+
       - shell: bash
         id: tagcheck
         run: |
@@ -28,17 +37,22 @@ jobs:
           else
             exit 20
           fi
-        env:
-          GIT_USER_NAME:  41898282+github-actions[bot]@users.noreply.github.com
-          GIT_USER_EMAIL: github-actions[bot]
+
       - if: steps.tagcheck.outputs.exit_code == 10
         uses: neverendingqs/gh-action-tag-on-npm-version@master
+        with:
+          git-user-email: ${{ env.GIT_USER_NAME }}
+          git-user-name: ${{ env.GIT_USER_EMAIL }}
+          tag-prefix: ${{ env.TAG_PREFIX }}
+
       - if: steps.tagcheck.outputs.exit_code == 10
         uses: actions/setup-node@v1
         with:
           node-version: 16
+
       - if: steps.tagcheck.outputs.exit_code == 10
         run: npm ci
+
       - if: steps.tagcheck.outputs.exit_code == 10
         name: Publish to Visual Studio Marketplace
         uses: HaaLeo/publish-vscode-extension@v1
