@@ -39,14 +39,6 @@ jobs:
             echo "exit_code=201" >> $GITHUB_OUTPUT
           fi
 
-
-      - if: success() && steps.tagcheck.outputs.exit_code == 404
-        uses: neverendingqs/gh-action-tag-on-npm-version@master
-        with:
-          git-user-email: ${{ env.GIT_USER_NAME }}
-          git-user-name: ${{ env.GIT_USER_EMAIL }}
-          tag-prefix: ${{ env.TAG_PREFIX }}
-
       - if: success() && steps.tagcheck.outputs.exit_code == 404
         uses: actions/setup-node@v1
         with:
@@ -61,3 +53,10 @@ jobs:
         with:
           pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
           registryUrl: https://marketplace.visualstudio.com
+
+      - if: success() && steps.tagcheck.outputs.exit_code == 404
+        uses: neverendingqs/gh-action-tag-on-npm-version@master
+        with:
+          git-user-email: ${{ env.GIT_USER_NAME }}
+          git-user-name: ${{ env.GIT_USER_EMAIL }}
+          tag-prefix: ${{ env.TAG_PREFIX }}
