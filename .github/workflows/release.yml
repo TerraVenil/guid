@@ -34,9 +34,9 @@ jobs:
           git fetch --tags
 
           if ! git tag | grep "${TAG}"; then
-            echo ::set-output name=exit_code::404
+            echo "exit_code=404" >> $GITHUB_OUTPUT
           else
-            echo ::set-output name=exit_code::201
+            echo "exit_code=201" >> $GITHUB_OUTPUT
           fi
 
 
