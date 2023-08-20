@@ -19,7 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 	
     context.subscriptions.push(
-        vscode.commands.registerCommand('extension.guid', generateGuid()));
+        vscode.commands.registerCommand('extension.guid', generateGuid(false)));
     context.subscriptions.push(
         vscode.commands.registerCommand('extension.guid_lowercase', generateGuid(true)));
 }
