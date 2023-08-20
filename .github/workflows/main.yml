@@ -1,4 +1,4 @@
-name: Release Workflow 2
+name: Release Workflow
 
 env:
   GIT_USER_NAME:  41898282+github-actions[bot]@users.noreply.github.com
